@@ -4,7 +4,16 @@ const cheerio = require('cheerio');
 const url = `https://www.imdb.com/find?s=tt&ttype=ft&ref_=fn_ft&q=`;
 const movieUrl = `https://www.imdb.com/title/`;
 
+//cache
+//storing data for already searched movie
+const searchCache = {};
+const movieCache = {};
+//First time searches would take time, after that it would be fast
 const searchMovies = (searchTerm) => {
+    if(searchCache[searchTerm]){
+        console.log('From searchCache');
+        return Promise.resolve(searchCache[searchTerm]);
+    }
     return fetch(`${url}${searchTerm}`)
         .then(response => {return response.text();})
         .then(body => {
@@ -20,13 +29,17 @@ const searchMovies = (searchTerm) => {
                     imdbId: imdbId
                 };
                 movies.push(movie);
-                
+                searchCache[searchTerm] = movies;      
             })
             return movies;
         });
 }
 
 const getMovie = (imdbID) => {
+    if(movieCache[imdbID]){
+        console.log('From movieCache');
+        return Promise.resolve(movieCache[imdbID]);
+    }
     return fetch(`${movieUrl}${imdbID}`)
     .then(response => response.text())
     .then(body => {
@@ -61,7 +74,7 @@ const getMovie = (imdbID) => {
         const budget = $('.subheading').first().next().text().trim().split(':')[1];
         const video = $('.slate').find('a');
         const trailer = `www.imdb.com${video.attr('href')}`;
-        return {
+        const movie =  {
             title,
             time,
             rating,
@@ -78,6 +91,8 @@ const getMovie = (imdbID) => {
             trailer
             // temp
         };
+        movieCache[imdbID] = movie;
+        return movie;
     })
     .catch(err => console.log(err));
 }
