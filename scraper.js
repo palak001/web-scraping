@@ -37,21 +37,46 @@ const getMovie = (imdbID) => {
         const time = $('.subtext time').text();
         const rating = $('.ratingValue ').text();
         
-        const genreArray = [];
+        const genre = [];
         $('.subtext a').each((i, element) => {
-            genreArray.push($(element).text());
+            genre.push($(element).text());
         });
-        const date = genreArray.pop().trim();
+        const date = genre.pop().trim();
         //returns the object except last
         // const genre = genreArray.slice(0, -1); 
-        const genre = genreArray;  
-
+        const poster = $('.poster').find('img').attr('src');
+        const summary = $('.summary_text').text();
+        // const credit_summary = $('.credit_summary_item');
+        const credit = [];
+        $('.credit_summary_item').each((i, element) => {
+            console.log($(element).text());
+            credit.push($(element).text().split(":"));
+        })
+        const Director = credit[0][1].split(',');
+        const Writer = credit[1][1].split(',');
+        const Stars = credit[2][1].split('|')[0].split(',');
+        // const temp = $('.credit_summary_item').text();
+        // console.log($('.credit_summary_item').text().trim());
+        const storyLine = $('.canwrap span').text();
+        const budget = $('.subheading').first().next().text().trim().split(':')[1];
+        const video = $('.slate').find('a');
+        const trailer = `www.imdb.com${video.attr('href')}`;
         return {
             title,
             time,
             rating,
-            genre: genre.toString(),
-            date 
+            genre,
+            date,
+            poster,
+            summary,
+            // credit,
+            Director, 
+            Writer,
+            Stars,
+            storyLine,
+            budget,
+            trailer
+            // temp
         };
     })
     .catch(err => console.log(err));
