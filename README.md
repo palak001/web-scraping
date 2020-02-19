@@ -1,5 +1,5 @@
 # imdB site scraper
-## using node, cheerios, node-fetch
+## using node, cheerio, node-fetch
 
 # Routes
 ### GET     
