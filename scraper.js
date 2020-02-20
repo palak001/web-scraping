@@ -8,7 +8,7 @@ const movieUrl = `https://www.imdb.com/title/`;
 //storing data for already searched movie
 const searchCache = {};
 const movieCache = {};
-//First time searches would take time, after that it would be fast
+
 const searchMovies = (searchTerm) => {
     if(searchCache[searchTerm]){
         console.log('From searchCache');
@@ -89,7 +89,6 @@ const getMovie = (imdbID) => {
             storyLine,
             budget,
             trailer
-            // temp
         };
         movieCache[imdbID] = movie;
         return movie;
